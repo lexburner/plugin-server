@@ -10,6 +10,21 @@ HTTP server for Higress Wasm plugins
 docker build -t higress-plugin-server:1.0.0 -f Dockerfile .
 ```
 
+#### 国内镜像加速（可选）
+
+本地构建时，如果 Alpine 官方源访问较慢，可以指定国内镜像源加速：
+
+```bash
+docker build --build-arg ALPINE_MIRROR=mirrors.aliyun.com -t higress-plugin-server:1.0.0 -f Dockerfile .
+```
+
+可选的镜像源：
+- 阿里云：`mirrors.aliyun.com`
+- 清华大学：`mirrors.tuna.tsinghua.edu.cn`
+- 中科大：`mirrors.ustc.edu.cn`
+
+> GitHub Actions 等海外环境无需指定，默认使用官方源 `dl-cdn.alpinelinux.org`。
+
 ### 构建多架构镜像并推送至仓库
 
 ```bash
