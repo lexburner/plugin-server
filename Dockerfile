@@ -1,8 +1,15 @@
 # 构建阶段：处理插件和元数据
 ARG PYTHON_IMAGE=higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/python:3.11-alpine
 ARG NGINX_IMAGE=higress-registry.cn-hangzhou.cr.aliyuncs.com/higress/nginx:alpine
+ARG ALPINE_MIRROR=""
 
 FROM $PYTHON_IMAGE AS builder
+
+# 配置 Alpine 镜像源（可选，本地构建时可指定国内镜像加速）
+ARG ALPINE_MIRROR
+RUN if [ -n "$ALPINE_MIRROR" ]; then \
+        sed -i "s|dl-cdn.alpinelinux.org|$ALPINE_MIRROR|g" /etc/apk/repositories; \
+    fi
 
 # 安装系统依赖
 RUN apk add --no-cache \

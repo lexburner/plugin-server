@@ -136,6 +136,7 @@ def main():
         print("\n以下插件未成功处理:")
         for plugin in failed_plugins:
             print(f"- {plugin}")
+        sys.exit(1)
 
 def process_plugin(base_path, plugin_name, plugin_url, version):
     """
@@ -181,15 +182,20 @@ def process_plugin(base_path, plugin_name, plugin_url, version):
 
     except subprocess.CalledProcessError as e:
         print(f"{plugin_name} ({version}) 命令执行失败: {e}")
+        shutil.rmtree(plugin_dir, ignore_errors=True)
         return False
     except Exception as e:
         print(f"{plugin_name} ({version}) 处理过程中发生错误: {e}")
+        shutil.rmtree(plugin_dir, ignore_errors=True)
         return False
     finally:
         shutil.rmtree(temp_download_dir, ignore_errors=True)
 
     if wasm_found:
         generate_metadata(plugin_dir, plugin_name)
+    else:
+        print(f"{plugin_name} ({version}) 未找到 .wasm 文件")
+        shutil.rmtree(plugin_dir, ignore_errors=True)
 
     return wasm_found
 
